@@ -1,0 +1,30 @@
+{
+  "name": "rokokol-skills",
+  "description": "Personal Claude Code skills",
+  "owner": {
+    "name": "rokokol",
+    "url": "https://github.com/rokokol"
+  },
+  "plugins": [
+    {
+      "name": "create-readme",
+      "source": "./",
+      "description": "Write a project's README.md to a fixed set of structure, tone and formatting rules",
+      "version": "0.1.0",
+      "author": {
+        "name": "rokokol"
+      },
+      "homepage": "https://github.com/rokokol/create-readme-skill",
+      "license": "MIT",
+      "category": "documentation",
+      "keywords": [
+        "readme",
+        "documentation",
+        "markdown",
+        "gfm",
+        "technical-writing",
+        "badges"
+      ]
+    }
+  ]
+}
