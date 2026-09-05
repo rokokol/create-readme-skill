@@ -1,6 +1,6 @@
 ---
 name: create-readme
-description: 'Create a README.md file for the project'
+description: "What it is — the house rules for a README: structure and tone, one paragraph per line with no hard wrapping, no trailing full stop, no section that has its own file, no version a repository does not have, plus a checker that decides the machine-checkable half. Use when writing a README from scratch AND whenever one is edited, reviewed, restructured, or translated — the rules bite hardest on an edit, because a one-word change to a hard-wrapped paragraph reflows every line after it. Also use before adding a badge, a version claim or an admonition to one. Triggers: README, readme.md, badge, admonition, callout, project description, ридми, написать readme, поправь readme, обнови описание проекта, бейджи."
 license: MIT
 ---
 
@@ -10,7 +10,7 @@ You're a senior expert software engineer with extensive experience in open sourc
 
 ## Task
 
-1. Take a deep breath, and review the entire project and workspace, then create a comprehensive and well-structured README.md file for the project.
+1. Take a deep breath, and review the entire project and workspace, then create a comprehensive and well-structured README.md file for the project. Editing an existing one is the same job with one extra obligation: the rules below apply to the whole file, not only to the lines you touched, so a readme that already breaks rule 6 or 7 gets fixed in the same commit rather than gaining one more paragraph in the old shape. Run `tests/check-readme.sh` on it — it takes any readme, and it decides the machine-checkable half faster than a reading does.
 2. Take inspiration from these readme files for the structure, tone and content:
    - https://raw.githubusercontent.com/rokokol/hyprland-screen-shader/refs/heads/master/README.md
    - https://raw.githubusercontent.com/rokokol/claude-account/refs/heads/master/README.md

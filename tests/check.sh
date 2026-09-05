@@ -16,7 +16,7 @@ fail() {
 
 # One source of truth for what gets linted: this list, read by nothing else
 scripts=(tests/check.sh tests/check-links.sh tests/check-readme.sh)
-docs=(README.md SKILL.md)
+docs=(README.md SKILL.md CHANGELOG.md)
 
 echo "== the scripts parse and lint"
 for s in "${scripts[@]}"; do bash -n "$s"; done
