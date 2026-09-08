@@ -72,5 +72,15 @@ for want in \
 done
 echo "   4 rules broken, 4 caught"
 
+echo "== and none of them fires on a readme that breaks nothing"
+# The other half of the proof, and the half that was missing: a lint proven only able to
+# go red is proven only to be loud. Every shape in this fixture is legitimate — an ordered
+# list, a table, an admonition done right, a fenced block and an indented one — and each
+# was a false positive at some point. An ordered list reddened every document that had
+# one, because `1.` and `2.` on consecutive lines read as a paragraph broken in two.
+out=$(./tests/check-readme.sh tests/fixtures/quiet-readme.md 2>&1) && quiet=0 || quiet=$?
+((quiet == 0)) ||
+  fail "the readme lint reported a finding on a readme that breaks no rule:"$'\n'"$out"
+
 echo
 echo "check: everything holds"

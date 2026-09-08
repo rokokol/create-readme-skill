@@ -2,6 +2,17 @@
 
 Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [ci](https://github.com/rokokol/ci-skill) skill, which owns what has no version
 
+## 2026-09-08
+
+### Fixed
+
+- **an ordered list was reported as a hard-wrapped paragraph.** Rule 6 knew that a heading, a bullet, a table row, a quote, a badge and an indented line are not prose, and did not know that `1.` and `2.` are not either, so any readme with a numbered list was reddened on every item after the first — found on a document that has two. A numbered list is a list; rule 7 still holds each of its items to ending bare, because a list item is a list item
+- **an indented code block was held to the prose rules.** A fenced block was skipped and an indented one was not, so a line of shell ending in a full stop was reported as a paragraph that ends with one. Code is exempt however it is marked
+
+### Added
+
+- **a fixture the lint must stay silent on.** It was proven able to go red and never proven able to stay quiet, which is half a proof: a rule that fires on everything passes that half perfectly. `tests/fixtures/quiet-readme.md` holds a legitimate shape for each rule — an ordered list, a bulleted one, a table, an admonition written correctly, a fenced block and an indented one — and the gate requires no finding on any of them. Both bugs above were false positives on that fixture, and the check was watched catching the first one again with the fix backed out
+
 ## 2026-09-05
 
 ### Changed

@@ -36,6 +36,13 @@ for file in "$@"; do
     esac
     [ "$inside" -eq 1 ] && continue
 
+    # An indented block is code as much as a fenced one is, and the rules below are about
+    # prose: a line of shell that ends in a full stop was being reported as a paragraph
+    if [ "${line#    }" != "$line" ] || [ "${line#	}" != "$line" ]; then
+      prev_prose=0
+      continue
+    fi
+
     # Rule 4: sections that have their own file at the root of a repository
     case $line in
       '#'*[Ll]icense* | '#'*[Cc]ontributing* | '#'*[Cc]hangelog*)
@@ -60,16 +67,22 @@ for file in "$@"; do
     esac
 
     # Rule 6: one paragraph is one line. Badge rows, tables, lists, headings and
-    # html are not paragraphs; two prose lines in a row are a hard wrap
-    case $line in
-      '' | '#'* | '-'* | '*'* | '|'* | '>'* | '<'* | '!['* | '['* | ' '*)
-        prev_prose=0
-        ;;
-      *)
-        [ "$prev_prose" -eq 1 ] && report "a hard-wrapped paragraph — one paragraph is one line"
-        prev_prose=1
-        ;;
-    esac
+    # html are not paragraphs; two prose lines in a row are a hard wrap. A numbered
+    # list is a list: `1.` and `2.` on consecutive lines were being read as one
+    # paragraph broken in two, and any document with an ordered list was reddened
+    if [[ "$line" =~ ^[0-9]+[.\)][[:space:]] ]]; then
+      prev_prose=0
+    else
+      case $line in
+        '' | '#'* | '-'* | '*'* | '|'* | '>'* | '<'* | '!['* | '['* | ' '*)
+          prev_prose=0
+          ;;
+        *)
+          [ "$prev_prose" -eq 1 ] && report "a hard-wrapped paragraph — one paragraph is one line"
+          prev_prose=1
+          ;;
+      esac
+    fi
   done <"$file"
 done
 
