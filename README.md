@@ -8,7 +8,7 @@
 ![Markdown](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white)
 ![no dependencies](https://img.shields.io/badge/dependencies-none-3DA639?style=flat)
 [![license](https://img.shields.io/badge/MIT-3DA639?style=flat)](LICENSE)
-[![ci](https://github.com/rokokol/create-readme-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/rokokol/create-readme-skill/actions/workflows/ci.yml)
+[![ci](https://github.com/rokokol/create-readme-skill/actions/workflows/build.yml/badge.svg)](https://github.com/rokokol/create-readme-skill/actions/workflows/build.yml)
 
 </div>
 
@@ -56,6 +56,8 @@ Then every check is made to fail on purpose: a fixture breaking every one of the
 SKILL.md               the skill itself — the role, the task, the rules
 tests/check.sh         the self-testing gate
 tests/check-readme.sh  the mechanical half of the rules, runnable on any readme
-tests/check-links.sh   relative links and heading anchors, network links left alone
 tests/fixtures/        the known-bad inputs each check is proven to catch
+check-skill.sh         the gate every skill repository shares, vendored from the ci skill
+check-pins.sh          the pin guard for the workflows, vendored from the ci skill
+vendor-sync.sh         keeps the vendored copies byte-equal to their source
 ```

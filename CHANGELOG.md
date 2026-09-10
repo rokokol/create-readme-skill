@@ -9,6 +9,11 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 - rule 9 leaves whether a repository has a version to the versioning skill, which owns that question, instead of restating it
 - the README links to the rules in `SKILL.md` instead of keeping a table of them, which had already fallen a rule behind once
 - the badge row opens with an `Agent Skill` badge instead of `Claude Code`: the `SKILL.md` format is read by OpenCode, Codex, Gemini CLI and the rest as well
+- the gate runs the ci skill's `check-skill.sh` and `check-pins.sh`, vendored beside `vendor-sync.sh`, which keeps them byte-equal to their source; the CI workflow is `build.yml` now, and so is the badge
+
+### Removed
+
+- `tests/check-links.sh`: the vendored `check-skill.sh` resolves every link and anchor in the same docs, checks the frontmatter too, and proves each check able to fail on every run. Two link checkers side by side were two answers to one question
 
 ### Fixed
 

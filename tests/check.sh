@@ -15,8 +15,7 @@ fail() {
 }
 
 # One source of truth for what gets linted: this list, read by nothing else
-scripts=(tests/check.sh tests/check-links.sh tests/check-readme.sh)
-docs=(README.md SKILL.md CHANGELOG.md)
+scripts=(tests/check.sh tests/check-readme.sh check-skill.sh check-pins.sh vendor-sync.sh)
 
 echo "== the scripts parse and lint"
 for s in "${scripts[@]}"; do bash -n "$s"; done
@@ -35,22 +34,19 @@ if (cd "$bad" && actionlint .github/workflows/*.yml >/dev/null 2>&1); then
   fail "actionlint passed tests/fixtures/must-fail.yml — it cannot catch anything"
 fi
 
-echo "== SKILL.md carries the frontmatter an agent loads it by"
-head -1 SKILL.md | grep -qx -- '---' || fail "SKILL.md does not open with a frontmatter block"
-front=$(sed -n '2,/^---$/p' SKILL.md)
-for key in name description license; do
-  printf '%s\n' "$front" | grep -q "^$key:" || fail "SKILL.md frontmatter has no $key"
-done
-printf '%s\n' "$front" | grep -q '^name: create-readme$' ||
-  fail "the skill's name is not what the plugin manifest and the readme call it"
+echo "== the vendored checkers are byte-equal to their source"
+# check-skill.sh and check-pins.sh come from the ci skill: every copy must still be the
+# blob .github/vendor.lock records, so one edited here instead of at its source fails by name
+./vendor-sync.sh check
 
-echo "== every relative link in the docs resolves"
-./tests/check-links.sh "${docs[@]}"
+echo "== the workflows take no tool from a registry"
+# The ci skill's pin guard, which proves on every run that it catches each unpinned shape
+./check-pins.sh
 
-echo "== the link checker is able to fail"
-if ./tests/check-links.sh tests/fixtures/broken-links.md >/dev/null 2>&1; then
-  fail "tests/fixtures/broken-links.md passed the link checker — it cannot catch anything"
-fi
+echo "== SKILL.md loads, every reference is reachable, and every link and anchor resolves"
+# The one gate every skill repository shares: frontmatter, the name, links and anchors in
+# every doc, each check proven able to fail on a planted copy on every run
+./check-skill.sh -n create-readme .
 
 echo "== this readme obeys the rules this skill hands out"
 ./tests/check-readme.sh README.md
