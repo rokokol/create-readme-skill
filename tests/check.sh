@@ -56,12 +56,15 @@ echo "== this readme obeys the rules this skill hands out"
 ./tests/check-readme.sh README.md
 
 echo "== each of those rules is able to fail"
-# One fixture breaking all four, and every finding demanded by name: a single
+# One fixture breaking every rule, and every finding demanded by name: a single
 # over-broad rule must not be able to cover for one that has gone dead
 out=$(./tests/check-readme.sh tests/fixtures/bad-readme.md 2>&1 || true)
 if ./tests/check-readme.sh tests/fixtures/bad-readme.md >/dev/null 2>&1; then
   fail "tests/fixtures/bad-readme.md passed the readme lint — it cannot catch anything"
 fi
+# The count is taken from the loop rather than typed beside it: a typed "4" stays true
+# only until someone adds a fifth rule to the list above
+caught=0
 for want in \
   'ends with a full stop' \
   'hard-wrapped paragraph' \
@@ -69,8 +72,9 @@ for want in \
   'has its own file'; do
   printf '%s\n' "$out" | grep -qF "$want" ||
     fail "the readme lint no longer reports \"$want\" on tests/fixtures/bad-readme.md"
+  caught=$((caught + 1))
 done
-echo "   4 rules broken, 4 caught"
+echo "   $caught rules broken, $caught caught"
 
 echo "== and none of them fires on a readme that breaks nothing"
 # The other half of the proof, and the half that was missing: a lint proven only able to

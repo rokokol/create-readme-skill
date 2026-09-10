@@ -46,6 +46,7 @@ Then ask Claude Code to write the readme, or reach for the skill by name. [SKILL
 | **GFM, admonitions, few emoji** | GitHub's own `> [!NOTE]` boxes where they earn the space, with the keyword alone on its line — otherwise GitHub renders a plain quote and the box silently never appears |
 | **One paragraph is one line** | Never hard-wrap: GitHub soft-wraps for you, and a manual break means a one-word edit reflows every line after it. Holds for list items and table cells too. The one exception is a fenced block where the alignment is the content |
 | **A paragraph ends bare** | Sentences inside it are punctuated normally; the last one drops the full stop. It is the single most visible thing these readmes share |
+| **The project's own logo in the header** | Where the project has a logo or icon, the readme's header carries it |
 | **Never claim a version the project does not have** | A repo that is only read at whatever revision is checked out — a skill, a prompt library, docs — gets no version badge, no "requires vX", and an install line that clones the default branch |
 
 ## Tests
@@ -54,9 +55,9 @@ Then ask Claude Code to write the readme, or reach for the skill by name. [SKILL
 nix develop -c ./tests/check.sh
 ```
 
-The rules above are handed out to other repositories, so the gate holds this one to the four of them a script can decide — bare paragraph ends, one line per paragraph, the admonition keyword alone on its line, no heading for something that has its own file. `tests/check-readme.sh` takes any readme, which is what makes it worth more than a review comment
+The rules above are handed out to other repositories, so the gate holds this one to the ones a script can decide — bare paragraph ends, one line per paragraph, the admonition keyword alone on its line, no heading for something that has its own file. `tests/check-readme.sh` takes any readme, which is what makes it worth more than a review comment
 
-Then every check is made to fail on purpose: a fixture breaking all four rules at once, with each finding demanded by name so one live rule cannot cover for a dead one, a fixture with a dangling path and a dead anchor for the link checker, and a broken workflow actionlint has to reject
+Then every check is made to fail on purpose: a fixture breaking every one of them at once, with each finding demanded by name so one live rule cannot cover for a dead one, a fixture with a dangling path and a dead anchor for the link checker, and a broken workflow actionlint has to reject
 
 ## Layout
 

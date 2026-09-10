@@ -2,6 +2,14 @@
 
 Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [ci](https://github.com/rokokol/ci-skill) skill, which owns what has no version
 
+## 2026-09-10
+
+### Fixed
+
+- `SKILL.md` broke its own rule 7: every rule ended with a full stop, while the skill tells every readme to drop it. The rules end bare now
+- the README's rules table had no row for rule 8, the project's own logo in the header
+- counts written beside the list they count — "the four things", "breaking all four", "the four of them a script can decide", and `4 rules broken, 4 caught` typed by hand next to the list it describes. The gate now takes the number from the loop, so a fifth rule cannot leave it behind
+
 ## 2026-09-08
 
 ### Fixed

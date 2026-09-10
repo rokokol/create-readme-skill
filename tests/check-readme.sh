@@ -4,8 +4,8 @@
 # Only the rules a script can decide are here: whether a paragraph ends bare,
 # whether it occupies one line, whether an admonition is shaped the way GitHub
 # wants it, and whether a section duplicates a file that already exists. Tone,
-# structure and honesty about versions stay a reading job — this catches the
-# four things that would otherwise be re-caught by eye on every readme.
+# structure and honesty about versions stay a reading job — this catches what
+# would otherwise be re-caught by eye on every readme.
 set -euo pipefail
 
 fail=0
