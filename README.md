@@ -4,7 +4,7 @@
 
 **Readmes that come out looking like the rest of them ( ˶ˆ ᗜ ˆ˵ )**
 
-![Claude Code](https://img.shields.io/badge/Claude_Code-D97757?style=flat&logo=anthropic&logoColor=white)
+[![Agent Skill](https://img.shields.io/badge/Agent_Skill-6E56CF?style=flat)](https://agentskills.io)
 ![Markdown](https://img.shields.io/badge/Markdown-000000?style=flat&logo=markdown&logoColor=white)
 ![no dependencies](https://img.shields.io/badge/dependencies-none-3DA639?style=flat)
 [![license](https://img.shields.io/badge/MIT-3DA639?style=flat)](LICENSE)
@@ -38,16 +38,7 @@ Then ask Claude Code to write the readme, or reach for the skill by name. [SKILL
 
 ## The rules
 
-| | |
-|---|---|
-| **Read the repository first** | The readme describes what is in the tree, in the order someone new needs it. A senior engineer's readme, not a template with the project's name pasted into it |
-| **Anchor the tone to real files** | Six readmes are named by URL as the reference for structure and voice, so "appealing and informative" resolves to something checkable |
-| **Sections that have a file do not get a section** | No `LICENSE`, `CONTRIBUTING` or `CHANGELOG` heading. What the project's own licence does not cover — third-party art, fonts, transcribed text — goes in `ASSETS.md`, linked from an `assets` badge, and the disclaimer lives there only |
-| **GFM, admonitions, few emoji** | GitHub's own `> [!NOTE]` boxes where they earn the space, with the keyword alone on its line — otherwise GitHub renders a plain quote and the box silently never appears |
-| **One paragraph is one line** | Never hard-wrap: GitHub soft-wraps for you, and a manual break means a one-word edit reflows every line after it. Holds for list items and table cells too. The one exception is a fenced block where the alignment is the content |
-| **A paragraph ends bare** | Sentences inside it are punctuated normally; the last one drops the full stop. It is the single most visible thing these readmes share |
-| **The project's own logo in the header** | Where the project has a logo or icon, the readme's header carries it |
-| **Never claim a version the project does not have** | A repo that is only read at whatever revision is checked out — a skill, a prompt library, docs — gets no version badge, no "requires vX", and an install line that clones the default branch |
+They are the numbered list in [SKILL.md](SKILL.md#task), which is the one copy — the table that used to sit here had already fallen a rule behind once, and a second list is how that happens
 
 ## Tests
 

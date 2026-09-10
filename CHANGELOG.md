@@ -1,8 +1,14 @@
 # Changelog
 
-Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [ci](https://github.com/rokokol/ci-skill) skill, which owns what has no version
+Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [versioning](https://github.com/rokokol/versioning-skill) skill, which owns what has no version
 
 ## 2026-09-10
+
+### Changed
+
+- rule 9 leaves whether a repository has a version to the versioning skill, which owns that question, instead of restating it
+- the README links to the rules in `SKILL.md` instead of keeping a table of them, which had already fallen a rule behind once
+- the badge row opens with an `Agent Skill` badge instead of `Claude Code`: the `SKILL.md` format is read by OpenCode, Codex, Gemini CLI and the rest as well
 
 ### Fixed
 
