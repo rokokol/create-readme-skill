@@ -76,6 +76,13 @@ for want in \
 done
 echo "   $caught rules broken, $caught caught"
 
+echo "== a full stop behind closing markup is still a full stop"
+# The rule read the last character only, so `.**`, `.)` and a stop inside closing
+# backticks all passed. Each line of this fixture hides one that way, and each is demanded
+stops=$(./tests/check-readme.sh tests/fixtures/stop-behind-markup.md 2>&1 | grep -cF 'ends with a full stop' || true)
+((stops == 3)) ||
+  fail "the readme lint caught $stops of the 3 full stops behind markup in tests/fixtures/stop-behind-markup.md"
+
 echo "== and none of them fires on a readme that breaks nothing"
 # The other half of the proof, and the half that was missing: a lint proven only able to
 # go red is proven only to be loud. Every shape in this fixture is legitimate — an ordered

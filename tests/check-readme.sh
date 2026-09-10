@@ -58,14 +58,6 @@ for file in "$@"; do
         ;;
     esac
 
-    # Rule 7: a paragraph, a list item and a table cell all end bare
-    case $line in
-      *..) ;;
-      *[!.].)
-        report "ends with a full stop"
-        ;;
-    esac
-
     # Rule 6: one paragraph is one line. Badge rows, tables, lists, headings and
     # html are not paragraphs; two prose lines in a row are a hard wrap. A numbered
     # list is a list: `1.` and `2.` on consecutive lines were being read as one
@@ -83,6 +75,19 @@ for file in "$@"; do
           ;;
       esac
     fi
+
+    # Rule 7: a paragraph, a list item and a table cell all end bare — read through the
+    # markup that can close after the stop, since `.**`, `.)` and `` .` `` end on one too
+    bare=$line
+    while case $bare in *[*_\)\`\"]) true ;; *) false ;; esac do
+      bare=${bare%?}
+    done
+    case $bare in
+      *..) ;;
+      *[!.].)
+        report "ends with a full stop"
+        ;;
+    esac
   done <"$file"
 done
 

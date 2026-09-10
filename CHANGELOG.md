@@ -12,6 +12,8 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 
 ### Fixed
 
+- **`check-readme.sh` saw a full stop only as the last character**, so one behind closing markup — `.**`, `.)`, a stop inside closing backticks — passed rule 7. It reads through that markup now, and a fixture hiding one each way has to be caught three times
+- `check-readme.sh` checked the rules in the order 4, 5, 7, 6; it follows their numbers now
 - `SKILL.md` broke its own rule 7: every rule ended with a full stop, while the skill tells every readme to drop it. The rules end bare now
 - the README's rules table had no row for rule 8, the project's own logo in the header
 - counts written beside the list they count — "the four things", "breaking all four", "the four of them a script can decide", and `4 rules broken, 4 caught` typed by hand next to the list it describes. The gate now takes the number from the loop, so a fifth rule cannot leave it behind
