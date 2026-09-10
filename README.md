@@ -14,7 +14,7 @@
 
 A readme is the file every visitor reads and nobody owns, so it gets rewritten from scratch in every repository and comes out different every time. This skill fixes the parts that are not worth re-deciding: what the header carries, what belongs in a dedicated file instead of a section, and the two formatting habits that decide whether the next diff is readable
 
-It is a prompt, not a generator: the agent reads the actual repository and writes about what is there. Tone is anchored to a named set of readmes rather than to adjectives — "concise and appealing" means nothing to a model, six files it can read mean quite a lot
+It is a prompt, not a generator: the agent reads the actual repository and writes about what is there. Tone is anchored to a named set of readmes rather than to adjectives — "concise and appealing" means nothing to a model, the readmes `SKILL.md` names, which it can read, mean quite a lot
 
 The rules are opinions, and they are mine. They are also the reason a stranger can tell that two of these repositories belong to the same person without looking at the owner
 

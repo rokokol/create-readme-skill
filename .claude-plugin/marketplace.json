@@ -10,7 +10,6 @@
       "name": "create-readme",
       "source": "./",
       "description": "Write a project's README.md to a fixed set of structure, tone and formatting rules",
-      "version": "0.1.0",
       "author": {
         "name": "rokokol"
       },
