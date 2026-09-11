@@ -18,6 +18,8 @@ It is a prompt, not a generator: the agent reads the actual repository and write
 
 The rules are opinions, and they are mine. They are also the reason a stranger can tell that two of these repositories belong to the same person without looking at the owner
 
+Repository-wide workarounds, deviations and pitfalls have their own [maintainer-docs](https://github.com/rokokol/maintainer-docs-skill) convention. This skill owns only their seam with a readme: a badge in the header and no duplicate section below
+
 ## Contents
 
 - [Install](#install)
