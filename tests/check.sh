@@ -15,7 +15,7 @@ fail() {
 }
 
 # One source of truth for what gets linted: this list, read by nothing else
-scripts=(tests/check.sh tests/check-readme.sh check-skill.sh check-pins.sh vendor-sync.sh)
+scripts=(tests/check.sh tests/check-readme.sh check-skill.sh check-pins.sh check-sh.sh vendor-sync.sh)
 
 echo "== the scripts parse and lint"
 for s in "${scripts[@]}"; do bash -n "$s"; done
@@ -47,6 +47,31 @@ echo "== SKILL.md loads, every reference is reachable, and every link and anchor
 # The one gate every skill repository shares: frontmatter, the name, links and anchors in
 # every doc, each check proven able to fail on a planted copy on every run
 ./check-skill.sh -n create-readme .
+
+echo "== check-readme.sh answers to its own help"
+# The bash-best-practices skill's checker, vendored like the ones above: the header is the
+# help, and every flag and exit code the script has is named there, held both ways. It
+# proves each of its own checks able to fail on every run. SKILL.md and the readme send
+# people to it, so every flag they give it has to be one it parses
+./check-sh.sh -m SKILL.md -m README.md tests/check-readme.sh
+
+echo "== check-readme.sh refuses what it was not given"
+# A lint that exits 0 with nothing to read reads as a clean readme, and one that takes
+# --help for a path answers every question with "no such file"; both are a usage error
+refuses() { # refuses WHAT ARGS... — check-readme.sh must exit 2 on ARGS
+  local what=$1 rc=0
+  shift
+  ./tests/check-readme.sh "$@" >/dev/null 2>&1 || rc=$?
+  ((rc == 2)) || fail "check-readme.sh exited $rc on $what, where a usage error is 2"
+}
+refuses "no readme at all"
+refuses "an unknown flag" --nope README.md
+refuses "a readme that does not exist" README.md tests/fixtures/no-such-readme.md
+# Taken for a path, an unknown flag exits 2 as well, as a missing file, so the code alone
+# cannot tell the two apart: the usage is what says it was read as a flag
+out=$(./tests/check-readme.sh --nope README.md 2>&1 || true)
+[[ "$out" == *"check-readme.sh README..."* ]] ||
+  fail "check-readme.sh took an unknown flag for a readme instead of printing its usage: $out"
 
 echo "== this readme obeys the rules this skill hands out"
 ./tests/check-readme.sh README.md

@@ -1,12 +1,53 @@
 #!/usr/bin/env bash
-# The mechanical half of the rules in SKILL.md, checked on a readme.
+# The mechanical half of the create-readme skill's rules, checked on any readme.
 #
-# Only the rules a script can decide are here: whether a paragraph ends bare,
-# whether it occupies one line, whether an admonition is shaped the way GitHub
-# wants it, and whether a section duplicates a file that already exists. Tone,
-# structure and honesty about versions stay a reading job — this catches what
-# would otherwise be re-caught by eye on every readme.
+#   check-readme.sh README...
+#
+#   -h, --help   print this and exit
+#
+# Only the rules a script can decide are here: whether a paragraph ends bare, whether it
+# occupies one line, whether an admonition is shaped the way GitHub wants it, and whether
+# a section duplicates a file that already exists. Tone, structure and honesty about
+# versions stay a reading job — this catches what would otherwise be re-caught by eye on
+# every readme. A finding is one line on stderr, README:LINE: what, so an editor can jump
+# to it.
+#
+# Exit 0 when every readme keeps the rules, 1 with one line per finding, 2 on a usage
+# error or a readme that does not exist.
+# Nothing here reaches the network. Needs bash 3.2 and POSIX tools only.
 set -euo pipefail
+
+# The whole header, however long it grows: up to the first line that is not a comment
+usage() { sed -n '2,/^[^#]/p' "${BASH_SOURCE[0]}" | sed '$d; s/^# \{0,1\}//'; }
+
+die() { # the request itself is wrong
+  printf 'check-readme: %s\n' "$1" >&2
+  exit 2
+}
+
+while (($#)); do
+  case "$1" in
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -*)
+      usage >&2
+      exit 2
+      ;;
+    *) break ;;
+  esac
+done
+# No readme is nothing to check, and nothing checked must not read as a clean readme
+(($# > 0)) || {
+  usage >&2
+  exit 2
+}
+# Every path is looked at before any is read, so a typo is a refusal rather than a
+# half-checked run whose findings hide it
+for file in "$@"; do
+  [[ -f "$file" ]] || die "$file: no such file"
+done
 
 fail=0
 file=''
@@ -17,11 +58,6 @@ report() { # report MESSAGE — about $file, at line $n
 }
 
 for file in "$@"; do
-  [ -f "$file" ] || {
-    printf 'readme: %s: no such file\n' "$file" >&2
-    fail=1
-    continue
-  }
   inside=0
   prev_prose=0
   n=0
@@ -91,4 +127,5 @@ for file in "$@"; do
   done <"$file"
 done
 
-exit "$fail"
+((fail == 0)) || exit 1
+printf 'check-readme: %s readme(s) keep every rule a script can decide\n' "$#"

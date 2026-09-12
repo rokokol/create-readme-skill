@@ -2,6 +2,17 @@
 
 Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [versioning](https://github.com/rokokol/versioning-skill) skill, which owns what has no version
 
+## 2026-09-12
+
+### Changed
+
+- `check-readme.sh` has the shape of the [bash-best-practices](https://github.com/rokokol/bash-best-practices-skill) family: its header is its help, it names its exit codes and the bash it needs, and a clean run ends with one line on stdout. The gate holds its help to its code with that skill's `check-sh.sh`, vendored beside the other checkers
+
+### Fixed
+
+- **`check-readme.sh --help` answered `readme: --help: no such file`**, taking the flag for a path. It prints the usage now, and an unknown flag is a usage error
+- **`check-readme.sh` with no readme exited 0**, which reads as a clean readme when nothing was checked. It exits 2 now, and so does a readme that does not exist, which used to exit 1 like a finding
+
 ## 2026-09-11
 
 ### Changed
