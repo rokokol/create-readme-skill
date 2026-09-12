@@ -1,0 +1,37 @@
+name: macos
+
+# The behaviour half of the gate under the bash macOS ships. tests/check-readme.sh claims
+# "Needs bash 3.2 and POSIX tools only", and this proves it under the real /bin/bash 3.2
+# on a macOS runner, with constructs planted that only a 3.2 rejects — the grep
+# check-sh.sh runs for newer syntax is a proxy, and this is the mechanism. Taken from
+# templates/github/workflows/macos.yml of https://github.com/rokokol/bash-best-practices-skill,
+# with the gate's own path. Its own workflow file, so the claim gets its own badge
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  bash32:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+      - name: the behaviour half under the bash macOS ships
+        env:
+          CHECK_BASH32: "1"
+        run: |
+          /bin/bash --version
+          /bin/bash ./tests/check.sh behaviour

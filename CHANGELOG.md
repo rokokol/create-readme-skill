@@ -4,6 +4,10 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 
 ## 2026-09-12
 
+### Added
+
+- a `macos` workflow and its badge: `check-readme.sh` claims the bash 3.2 macOS ships, and the behaviour half of the gate, `tests/check.sh behaviour`, now runs under the real `/bin/bash` 3.2 on a macOS runner, with constructs planted that only a 3.2 rejects
+
 ### Changed
 
 - `check-readme.sh` has the shape of the [bash-best-practices](https://github.com/rokokol/bash-best-practices-skill) family: its header is its help, it names its exit codes and the bash it needs, and a clean run ends with one line on stdout. The gate holds its help to its code with that skill's `check-sh.sh`, vendored beside the other checkers

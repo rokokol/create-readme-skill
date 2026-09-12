@@ -9,6 +9,7 @@
 ![no dependencies](https://img.shields.io/badge/dependencies-none-3DA639?style=flat)
 [![license](https://img.shields.io/badge/MIT-3DA639?style=flat)](LICENSE)
 [![ci](https://github.com/rokokol/create-readme-skill/actions/workflows/build.yml/badge.svg)](https://github.com/rokokol/create-readme-skill/actions/workflows/build.yml)
+[![macos](https://github.com/rokokol/create-readme-skill/actions/workflows/macos.yml/badge.svg)](https://github.com/rokokol/create-readme-skill/actions/workflows/macos.yml)
 
 </div>
 
@@ -46,6 +47,7 @@ They are the numbered list in [SKILL.md](SKILL.md#task), which is the one copy â
 
 ```sh
 nix develop -c ./tests/check.sh
+/bin/bash ./tests/check.sh behaviour   # under the bash macOS ships, as the macos workflow runs it
 ```
 
 The rules above are handed out to other repositories, so the gate holds this one to the ones a script can decide â€” bare paragraph ends, one line per paragraph, the admonition keyword alone on its line, no heading for something that has its own file. `tests/check-readme.sh` takes any readme, which is what makes it worth more than a review comment, and `tests/check-readme.sh --help` says what it decides and what its exit codes mean
