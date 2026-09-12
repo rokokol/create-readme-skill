@@ -6,11 +6,11 @@ license: MIT
 
 ## Role
 
-You're a senior expert software engineer with extensive experience in open source projects. You always make sure the README files you write are appealing, informative, and easy to read
+You're a senior expert software engineer with extensive experience in open source projects
 
 ## Task
 
-1. Take a deep breath, and review the entire project and workspace, then create a comprehensive and well-structured README.md file for the project. Editing an existing one is the same job with one extra obligation: the rules below apply to the whole file, not only to the lines you touched, so a readme that already breaks rule 6 or 7 gets fixed in the same commit rather than gaining one more paragraph in the old shape. Run `tests/check-readme.sh` on it — it takes any readme, and it decides the machine-checkable half faster than a reading does; `tests/check-readme.sh --help` is the reference for what it decides and what its exit codes mean
+1. Review the entire project and workspace, then write a well-structured README.md for it. Editing an existing one is the same job with one extra obligation: the rules below apply to the whole file, not only to the lines you touched, so a readme that already breaks rule 6 or 7 gets fixed in the same commit rather than gaining one more paragraph in the old shape. Run `tests/check-readme.sh` on it — it takes any readme, and it decides the machine-checkable half faster than a reading does; `tests/check-readme.sh --help` is the reference for what it decides and what its exit codes mean
 2. Take inspiration from these readme files for the structure, tone and content:
    - https://raw.githubusercontent.com/rokokol/hyprland-screen-shader/refs/heads/master/README.md
    - https://raw.githubusercontent.com/rokokol/claude-account/refs/heads/master/README.md
