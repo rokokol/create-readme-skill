@@ -37,11 +37,11 @@ git clone git@github.com:rokokol/create-readme-skill ~/.claude/skills/create-rea
 > [!NOTE]
 > A skill has no version to pin — it is read at whatever revision you have checked out, so `git pull` is the whole upgrade path
 
-Then ask Claude Code to write the readme, or reach for the skill by name. [SKILL.md](SKILL.md) is the whole of it
+Then ask your agent to write the readme, or reach for the skill by name. [SKILL.md](SKILL.md) is the whole of it
 
 ## The rules
 
-They are the numbered list in [SKILL.md](SKILL.md#task), which is the one copy — the table that used to sit here had already fallen a rule behind once, and a second list is how that happens
+They are the numbered list in [SKILL.md](SKILL.md#task), which is the one copy rather than a second table that can drift
 
 ## Tests
 
