@@ -92,8 +92,8 @@ check_lint() {
 
 check_behaviour() {
   echo "== check-readme.sh answers to its own help"
-  # The bash-best-practices skill's checker, vendored like the ones above: the header is the
-  # help, and every flag and exit code the script has is named there, held both ways. It
+  # The bash-best-practices skill's checker, vendored like the ones above: every flag and
+  # exit code the script has is named in its help, held both ways. It
   # proves each of its own checks able to fail on every run. SKILL.md and the readme send
   # people to it, so every flag they give it has to be one it parses
   checker -m SKILL.md -m README.md tests/check-readme.sh

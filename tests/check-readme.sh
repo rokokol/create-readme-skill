@@ -1,24 +1,26 @@
 #!/usr/bin/env bash
-# The mechanical half of the create-readme skill's rules, checked on any readme.
-#
-#   check-readme.sh README...
-#
-#   -h, --help   print this and exit
-#
-# Only the rules a script can decide are here: whether a paragraph ends bare, whether it
-# occupies one line, whether an admonition is shaped the way GitHub wants it, and whether
-# a section duplicates a file that already exists. Tone, structure and honesty about
-# versions stay a reading job — this catches what would otherwise be re-caught by eye on
-# every readme. A finding is one line on stderr, README:LINE: what, so an editor can jump
-# to it.
-#
-# Exit 0 when every readme keeps the rules, 1 with one line per finding, 2 on a usage
-# error or a readme that does not exist.
 # Nothing here reaches the network. Needs bash 3.2 and POSIX tools only.
 set -euo pipefail
 
-# The whole header, however long it grows: up to the first line that is not a comment
-usage() { sed -n '2,/^[^#]/p' "${BASH_SOURCE[0]}" | sed '$d; s/^# \{0,1\}//'; }
+usage() {
+  cat <<'EOF'
+The mechanical half of the create-readme skill's rules, checked on any readme.
+
+  check-readme.sh README...
+
+  -h, --help   print this and exit
+
+Only the rules a script can decide are here: whether a paragraph ends bare, whether it
+occupies one line, whether an admonition is shaped the way GitHub wants it, and whether
+a section duplicates a file that already exists. Tone, structure and honesty about
+versions stay a reading job — this catches what would otherwise be re-caught by eye on
+every readme. A finding is one line on stderr, README:LINE: what, so an editor can jump
+to it.
+
+Exit 0 when every readme keeps the rules, 1 with one line per finding, 2 on a usage
+error or a readme that does not exist.
+EOF
+}
 
 die() { # the request itself is wrong
   printf 'check-readme: %s\n' "$1" >&2
