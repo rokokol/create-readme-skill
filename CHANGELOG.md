@@ -10,6 +10,10 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 - `tests/check-readme.sh`'s `--help` now carries what a caller needs, the network line included — `Nothing here reaches the network` — which the entry above said stayed in the header; the header keeps only the bash floor, which an editor needs and a caller does not. `tests/check.sh`, the gate, now answers `-h`, `--help` and `help` too, with the same split between its usage and its header
 - `check-skill.sh` is vendored from the [skill-authoring](https://github.com/rokokol/skill-authoring-skill) skill, where the rules it checks now live, and reports the rules a skill can break without breaking as warnings on stdout, the exit code unchanged: a `Layout` or install section in runtime, `used to`, a `path:line` citation, a link to a sibling skill, a concrete model id, and the rest its `--help` lists
 
+### Fixed
+
+- `tests/check-readme.sh` no longer takes a readme's own title for a section that has its own file: `# Contributing skill` was reported beside `## License`, so the contributing skill's readme failed the checker for its name. The level-one heading is exempt, and a `## License`, `## Contributing` or `## Changelog` section is still reported
+
 ## 2026-09-12
 
 ### Added

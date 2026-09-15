@@ -161,6 +161,8 @@ check_behaviour() {
   # list, a table, an admonition done right, a fenced block and an indented one — and each
   # was a false positive at some point. An ordered list reddened every document that had
   # one, because `1.` and `2.` on consecutive lines read as a paragraph broken in two.
+  # Its title says "contributing" on purpose: a readme's own title is the project's name,
+  # and the rule against a section that has its own file fired on the contributing skill's
   out=$(readme tests/fixtures/quiet-readme.md 2>&1) && quiet=0 || quiet=$?
   ((quiet == 0)) ||
     fail "the readme lint reported a finding on a readme that breaks no rule:"$'\n'"$out"

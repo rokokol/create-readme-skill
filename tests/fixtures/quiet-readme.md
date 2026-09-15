@@ -1,4 +1,4 @@
-# A readme breaking none of them
+# A readme breaking none of them, titled like the contributing skill
 
 A checker is only half proven by a document it reddens: the other half is a document it must leave alone. Every shape below is legitimate, and a finding on any of them is a false positive
 

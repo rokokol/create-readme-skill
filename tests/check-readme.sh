@@ -82,8 +82,11 @@ for file in "$@"; do
       continue
     fi
 
-    # Rule 4: sections that have their own file at the root of a repository
+    # Rule 4: sections that have their own file at the root of a repository. The level-one
+    # heading is the readme's own title, the project's name, which may well be a contributing
+    # skill or a changelog tool; the sections below it are what the rule is about
     case $line in
+      '# '*) ;;
       '#'*[Ll]icense* | '#'*[Cc]ontributing* | '#'*[Cc]hangelog*)
         report "a heading for something that has its own file: ${line}"
         ;;
