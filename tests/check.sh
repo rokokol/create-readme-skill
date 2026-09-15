@@ -72,9 +72,12 @@ check_lint() {
   fi
 
   echo "== the vendored checkers are byte-equal to their source"
-  # check-skill.sh, check-pins.sh and check-sh.sh come from the ci and bash-best-practices
-  # skills: every copy must still be the blob .github/vendor.lock records, so one edited
-  # here instead of at its source fails by name
+  # check-skill.sh comes from the skill-authoring skill
+  # (https://github.com/rokokol/skill-authoring-skill), check-pins.sh from the ci skill
+  # (https://github.com/rokokol/ci-skill) and check-sh.sh from the bash-best-practices
+  # skill (https://github.com/rokokol/bash-best-practices-skill): every copy must still be
+  # the blob .github/vendor.lock records, so one edited here instead of at its source
+  # fails by name
   ./vendor-sync.sh check
 
   echo "== the workflows take no tool from a registry"

@@ -61,7 +61,7 @@ SKILL.md               the skill itself — the role, the task, the rules
 tests/check.sh         the self-testing gate
 tests/check-readme.sh  the mechanical half of the rules, runnable on any readme
 tests/fixtures/        the known-bad inputs each check is proven to catch
-check-skill.sh         the gate every skill repository shares, vendored from the ci skill
+check-skill.sh         the gate every skill repository shares, vendored from the skill-authoring skill
 check-pins.sh          the pin guard for the workflows, vendored from the ci skill
 check-sh.sh            holds check-readme.sh's help to its code, vendored from the bash-best-practices skill
 vendor-sync.sh         keeps the vendored copies byte-equal to their source
