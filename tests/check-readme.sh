@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Nothing here reaches the network. Needs bash 3.2 and POSIX tools only.
+# Needs bash 3.2 and POSIX tools only
 set -euo pipefail
 
 usage() {
   cat <<'EOF'
-The mechanical half of the create-readme skill's rules, checked on any readme.
+The mechanical half of the create-readme skill's rules, checked on any readme
 
   check-readme.sh README...
 
@@ -15,10 +15,11 @@ occupies one line, whether an admonition is shaped the way GitHub wants it, and 
 a section duplicates a file that already exists. Tone, structure and honesty about
 versions stay a reading job — this catches what would otherwise be re-caught by eye on
 every readme. A finding is one line on stderr, README:LINE: what, so an editor can jump
-to it.
+to it
 
+Nothing here reaches the network.
 Exit 0 when every readme keeps the rules, 1 with one line per finding, 2 on a usage
-error or a readme that does not exist.
+error or a readme that does not exist
 EOF
 }
 

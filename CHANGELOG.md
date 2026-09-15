@@ -7,6 +7,7 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 ### Changed
 
 - `tests/check-readme.sh` prints its help from a heredoc instead of reading its own header back, which under `bash <(…)` is the pipe bash reads the script from and printed nothing; the network and bash claims stay in the header comment and are no longer part of `--help`
+- `tests/check-readme.sh`'s `--help` now carries what a caller needs, the network line included — `Nothing here reaches the network` — which the entry above said stayed in the header; the header keeps only the bash floor, which an editor needs and a caller does not. `tests/check.sh`, the gate, now answers `-h`, `--help` and `help` too, with the same split between its usage and its header
 - `check-skill.sh` is vendored from the [skill-authoring](https://github.com/rokokol/skill-authoring-skill) skill, where the rules it checks now live, and reports the rules a skill can break without breaking as warnings on stdout, the exit code unchanged: a `Layout` or install section in runtime, `used to`, a `path:line` citation, a link to a sibling skill, a concrete model id, and the rest its `--help` lists
 
 ## 2026-09-12
