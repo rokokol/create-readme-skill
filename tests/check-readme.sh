@@ -17,7 +17,7 @@ versions stay a reading job — this catches what would otherwise be re-caught b
 every readme. A finding is one line on stderr, README:LINE: what, so an editor can jump
 to it
 
-Nothing here reaches the network.
+Nothing here reaches the network
 Exit 0 when every readme keeps the rules, 1 with one line per finding, 2 on a usage
 error or a readme that does not exist
 EOF
