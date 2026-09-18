@@ -2,6 +2,12 @@
 
 Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [versioning](https://github.com/rokokol/versioning-skill) skill, which owns what has no version
 
+## 2026-09-18
+
+### Added
+
+- the dev shell carries `jq`, ahead of the checker that will need it: the vendored `check-sh.sh` is moving off its awk lexer to reading the script it is given as a tree, out of `shfmt --to-json`, with jq flattening that tree into the rows its rules read. It lands before the cascade delivers that checker, so a new copy does not arrive to a missing tool and a red verify
+
 ## 2026-09-15
 
 ### Changed
