@@ -41,7 +41,14 @@ scripts=(tests/check.sh tests/check-readme.sh check-skill.sh check-pins.sh check
 # shebang finds: on a macOS runner the gate is started as /bin/bash to prove the 3.2 macOS
 # ships, while `env bash` would find Homebrew's 5
 readme() { "$BASH" "$HERE/tests/check-readme.sh" "$@"; }
-checker() { "$BASH" "$HERE/check-sh.sh" "$@"; }
+# One place decides the mode, so no call is left asking for a tree the runner proving the
+# 3.2 claim does not have: check-sh.sh reads the script it is given through shfmt, and a
+# macOS image carries neither shfmt nor jq
+checker() {
+  local tree_flag=()
+  [[ -z "${CHECK_BASH32:-}" ]] || tree_flag=(--bash-only)
+  "$BASH" "$HERE/check-sh.sh" ${tree_flag[@]+"${tree_flag[@]}"} "$@"
+}
 
 # With a template, so a crashed run's leftovers say whose they are
 work=$(mktemp -d "${TMPDIR:-/tmp}/check.XXXXXX")
