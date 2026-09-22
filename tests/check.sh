@@ -191,7 +191,11 @@ check_behaviour() {
     sed 's/^  while IFS= read -r line; do$/  mapfile -t lines <\/dev\/null; while IFS= read -r line; do/' \
       check-prose.sh >"$work/mapfile.sh"
     grep -q 'mapfile -t lines' "$work/mapfile.sh" || fail "the mapfile plant did not land in check-prose.sh"
-    out=$("$BASH" "$work/mapfile.sh" README.md 2>&1) && fail "a check-prose.sh reading its readme with mapfile passed under this bash"
+    # Nested, so the self-test does not answer first: it runs this same planted copy over
+    # its own documents, dies on the same line, and reports a rule catching nothing —
+    # true, and not what this plant is asking about
+    out=$(CHECK_PROSE_NESTED=1 "$BASH" "$work/mapfile.sh" README.md 2>&1) &&
+      fail "a check-prose.sh reading its readme with mapfile passed under this bash"
     [[ "$out" == *"mapfile: command not found"* ]] ||
       fail "the mapfile plant failed for a reason other than mapfile being absent: $out"
   fi
