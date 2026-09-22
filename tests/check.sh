@@ -166,7 +166,8 @@ check_behaviour() {
   }
   neutered "\$'\\xe2\\x80\\x9c'" "\$'\\xe2\\x80\\xNEVER'" \
     "the left double quotation mark" "of the 6 typographic marks"
-  neutered '*[*_\)\`\"]' '*[*_\)\"]' \
+  # shellcheck disable=SC2016 # the backtick is the character being taken out of the class
+  neutered 'TAIL_MARKUP='"'"'*[*_)`"]'"'" "TAIL_MARKUP='*[*_)\"]'" \
     "a full stop behind a closing code span" "of the 4 full stops"
   neutered "'> [!'*']'?*" "'NEVERMATCHES'" \
     "the admonition shape" "admonition keyword"
