@@ -30,8 +30,22 @@ Repository-wide workarounds, deviations and pitfalls have their own [maintainer-
 
 ## Install
 
-```sh
-git clone git@github.com:rokokol/create-readme-skill ~/.claude/skills/create-readme
+```bash
+npx skills add -g rokokol/create-readme-skill    # for you, everywhere
+npx skills add rokokol/create-readme-skill       # for the project you are standing in
+```
+
+Claude Code also takes it as a plugin:
+
+```
+/plugin marketplace add rokokol/skills
+/plugin install create-readme@rokokol-skills
+```
+
+or by hand — clone into whichever skills directory your agent reads:
+
+```bash
+git clone https://github.com/rokokol/create-readme-skill ~/.claude/skills/create-readme
 ```
 
 > [!NOTE]
@@ -50,19 +64,19 @@ nix develop -c ./tests/check.sh
 /bin/bash ./tests/check.sh behaviour   # under the bash macOS ships, as the macos workflow runs it
 ```
 
-The rules above are handed out to other repositories, so the gate holds this one to the ones a script can decide — bare paragraph ends, one line per paragraph, the admonition keyword alone on its line, no heading for something that has its own file. `tests/check-readme.sh` takes any readme, which is what makes it worth more than a review comment, and `tests/check-readme.sh --help` says what it decides and what its exit codes mean
+The rules above are handed out to other repositories, so the gate holds this one to the ones a script can decide — bare paragraph ends, one line per paragraph, the admonition keyword alone on its line, a plain quotation mark, no heading for something that has its own file. `check-prose.sh` takes any markdown rather than readmes alone, because the rules are the readme's but the reader is the same person reading a SKILL.md or a changelog, and that is what makes it worth more than a review comment; `check-prose.sh --help` says what it decides and what its exit codes mean
 
 Then every check is made to fail on purpose: a fixture breaking every one of them at once, with each finding demanded by name so one live rule cannot cover for a dead one, a fixture with a dangling path and a dead anchor for the link checker, and a broken workflow actionlint has to reject
 
 ## Layout
 
 ```
-SKILL.md               the skill itself — the role, the task, the rules
-tests/check.sh         the self-testing gate
-tests/check-readme.sh  the mechanical half of the rules, runnable on any readme
-tests/fixtures/        the known-bad inputs each check is proven to catch
-check-skill.sh         the gate every skill repository shares, vendored from the skill-authoring skill
-check-pins.sh          the pin guard for the workflows, vendored from the ci skill
-check-sh.sh            holds check-readme.sh's help to its code, vendored from the bash-best-practices skill
-vendor-sync.sh         keeps the vendored copies byte-equal to their source
+SKILL.md          the skill itself — the role, the task, the rules
+check-prose.sh    the mechanical half of the rules, runnable on any markdown
+tests/check.sh    the self-testing gate
+tests/fixtures/   the known-bad inputs each check is proven to catch
+check-skill.sh    the gate every skill repository shares, vendored from the skill-authoring skill
+check-pins.sh     the pin guard for the workflows, vendored from the ci skill
+check-sh.sh       holds check-prose.sh's help to its code, vendored from the bash-best-practices skill
+vendor-sync.sh    keeps the vendored copies byte-equal to their source
 ```

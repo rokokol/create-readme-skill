@@ -13,9 +13,9 @@ check.sh — the whole gate
 
 Two halves, because they need different things. `lint` reads what the repository ships
 — the scripts, the workflows, SKILL.md and the vendored copies — with the linters the
-flake's dev shell pins: actionlint, shellcheck, shfmt. `behaviour` runs check-readme.sh
+flake's dev shell pins: actionlint, shellcheck, shfmt. `behaviour` runs check-prose.sh
 on the readme and the fixtures and needs only bash and POSIX tools, so it runs under the
-bash 3.2 macOS ships, which is what check-readme.sh claims to run on. `all`, the default,
+bash 3.2 macOS ships, which is what check-prose.sh claims to run on. `all`, the default,
 is both
 
   nix develop -c ./tests/check.sh
@@ -35,12 +35,12 @@ fail() {
 }
 
 # One source of truth for what gets linted: this list, read by nothing else
-scripts=(tests/check.sh tests/check-readme.sh check-skill.sh check-pins.sh check-sh.sh vendor-sync.sh)
+scripts=(tests/check.sh check-prose.sh check-skill.sh check-pins.sh check-sh.sh vendor-sync.sh)
 
 # Every script below runs under the bash running this gate, not under whatever bash its
 # shebang finds: on a macOS runner the gate is started as /bin/bash to prove the 3.2 macOS
 # ships, while `env bash` would find Homebrew's 5
-readme() { "$BASH" "$HERE/tests/check-readme.sh" "$@"; }
+prose() { "$BASH" "$HERE/check-prose.sh" "$@"; }
 # One place decides the mode, so no call is left asking for a tree the runner proving the
 # 3.2 claim does not have: check-sh.sh reads the script it is given through shfmt, and a
 # macOS image carries neither shfmt nor jq
@@ -112,14 +112,14 @@ check_lint() {
 }
 
 check_behaviour() {
-  echo "== check-readme.sh answers to its own help"
+  echo "== check-prose.sh answers to its own help"
   # The bash-best-practices skill's checker, vendored like the ones above: every flag and
   # exit code the script has is named in its help, held both ways. It
   # proves each of its own checks able to fail on every run. SKILL.md and the readme send
   # people to it, so every flag they give it has to be one it parses
-  checker -m SKILL.md -m README.md tests/check-readme.sh
+  checker -m SKILL.md -m README.md check-prose.sh
 
-  echo "== check-readme.sh refuses what it was not given"
+  echo "== check-prose.sh refuses what it was not given"
   # A lint that exits 0 with nothing to read reads as a clean readme, and one that takes
   # --help for a path answers every question with "no such file"; both are a usage error
   refuses "no readme at all"
@@ -127,18 +127,20 @@ check_behaviour() {
   refuses "a readme that does not exist" README.md tests/fixtures/no-such-readme.md
   # Taken for a path, an unknown flag exits 2 as well, as a missing file, so the code alone
   # cannot tell the two apart: the usage is what says it was read as a flag
-  out=$(readme --nope README.md 2>&1 || true)
-  [[ "$out" == *"check-readme.sh README..."* ]] ||
-    fail "check-readme.sh took an unknown flag for a readme instead of printing its usage: $out"
+  out=$(prose --nope README.md 2>&1 || true)
+  [[ "$out" == *"check-prose.sh DOC..."* ]] ||
+    fail "check-prose.sh took an unknown flag for a document instead of printing its usage: $out"
 
-  echo "== this readme obeys the rules this skill hands out"
-  readme README.md
+  echo "== every document this repository ships obeys the rules it hands out"
+  # Not the readme alone: the rules are the readme's and the reader is the same person, so
+  # SKILL.md and the changelog are held to them too
+  prose README.md SKILL.md CHANGELOG.md
 
   echo "== each of those rules is able to fail"
   # One fixture breaking every rule, and every finding demanded by name: a single
   # over-broad rule must not be able to cover for one that has gone dead
-  out=$(readme tests/fixtures/bad-readme.md 2>&1 || true)
-  if readme tests/fixtures/bad-readme.md >/dev/null 2>&1; then
+  out=$(prose tests/fixtures/bad-readme.md 2>&1 || true)
+  if prose tests/fixtures/bad-readme.md >/dev/null 2>&1; then
     fail "tests/fixtures/bad-readme.md passed the readme lint — it cannot catch anything"
   fi
   # The count is taken from the loop rather than typed beside it: a typed "4" stays true
@@ -148,6 +150,7 @@ check_behaviour() {
     'ends with a full stop' \
     'hard-wrapped paragraph' \
     "admonition keyword" \
+    'typographic quotation mark' \
     'has its own file'; do
     printf '%s\n' "$out" | grep -qF "$want" ||
       fail "the readme lint no longer reports \"$want\" on tests/fixtures/bad-readme.md"
@@ -158,7 +161,7 @@ check_behaviour() {
   echo "== a full stop behind closing markup is still a full stop"
   # The rule read the last character only, so `.**`, `.)` and a stop inside closing
   # backticks all passed. Each line of this fixture hides one that way, and each is demanded
-  stops=$(readme tests/fixtures/stop-behind-markup.md 2>&1 | grep -cF 'ends with a full stop' || true)
+  stops=$(prose tests/fixtures/stop-behind-markup.md 2>&1 | grep -cF 'ends with a full stop' || true)
   ((stops == 3)) ||
     fail "the readme lint caught $stops of the 3 full stops behind markup in tests/fixtures/stop-behind-markup.md"
 
@@ -170,11 +173,18 @@ check_behaviour() {
   # one, because `1.` and `2.` on consecutive lines read as a paragraph broken in two.
   # Its title says "contributing" on purpose: a readme's own title is the project's name,
   # and the rule against a section that has its own file fired on the contributing skill's
-  out=$(readme tests/fixtures/quiet-readme.md 2>&1) && quiet=0 || quiet=$?
-  ((quiet == 0)) ||
-    fail "the readme lint reported a finding on a readme that breaks no rule:"$'\n'"$out"
+  # quiet-skill.md is the same proof for the documents that are not readmes, where every
+  # false positive this checker has had since it began taking them lives: a frontmatter
+  # read as two paragraphs in a row, a heading that contains "contributing" rather than
+  # being it, a rule showing the character it forbids inside a code span, and a paragraph
+  # closing on a literal a program prints
+  for f in tests/fixtures/quiet-readme.md tests/fixtures/quiet-skill.md; do
+    out=$(prose "$f" 2>&1) && quiet=0 || quiet=$?
+    ((quiet == 0)) ||
+      fail "the prose lint reported a finding on $f, which breaks no rule:"$'\n'"$out"
+  done
 
-  # check-readme.sh claims bash 3.2, and a grep for newer syntax is a proxy; the mechanism
+  # check-prose.sh claims bash 3.2, and a grep for newer syntax is a proxy; the mechanism
   # is this half under the real 3.2, with two constructs planted that only a 3.2 rejects.
   # Under a newer bash they are no defect at all, so this block runs only where
   # CHECK_BASH32 says which bash this is, and first checks that claim
@@ -184,27 +194,27 @@ check_behaviour() {
       fail "CHECK_BASH32 is set, but this is bash $BASH_VERSION — on macOS, run: /bin/bash ./tests/check.sh behaviour"
     ! "$BASH" -c 'declare -A m' >/dev/null 2>&1 || fail "CHECK_BASH32 is set, but this bash accepts declare -A"
     awk '{ print } /^set -euo pipefail$/ && !done { print "declare -A check_readme_probe || exit 70"; done = 1 }' \
-      tests/check-readme.sh >"$work/probe.sh"
+      check-prose.sh >"$work/probe.sh"
     status=0
     "$BASH" "$work/probe.sh" README.md >/dev/null 2>&1 || status=$?
-    ((status == 70)) || fail "a check-readme.sh that declares an associative array ran under this bash (got $status) — this is not a 3.2"
+    ((status == 70)) || fail "a check-prose.sh that declares an associative array ran under this bash (got $status) — this is not a 3.2"
     # mapfile does not exist here, so a lint reading its readme with it dies on the spot
     # under set -e — the class of regression only this bash catches, since a newer one
     # runs the same line without a word
     sed 's/^  while IFS= read -r line; do$/  mapfile -t lines <\/dev\/null; while IFS= read -r line; do/' \
-      tests/check-readme.sh >"$work/mapfile.sh"
-    grep -q 'mapfile -t lines' "$work/mapfile.sh" || fail "the mapfile plant did not land in check-readme.sh"
-    out=$("$BASH" "$work/mapfile.sh" README.md 2>&1) && fail "a check-readme.sh reading its readme with mapfile passed under this bash"
+      check-prose.sh >"$work/mapfile.sh"
+    grep -q 'mapfile -t lines' "$work/mapfile.sh" || fail "the mapfile plant did not land in check-prose.sh"
+    out=$("$BASH" "$work/mapfile.sh" README.md 2>&1) && fail "a check-prose.sh reading its readme with mapfile passed under this bash"
     [[ "$out" == *"mapfile: command not found"* ]] ||
       fail "the mapfile plant failed for a reason other than mapfile being absent: $out"
   fi
 }
 
-refuses() { # refuses WHAT ARGS... — check-readme.sh must exit 2 on ARGS
+refuses() { # refuses WHAT ARGS... — check-prose.sh must exit 2 on ARGS
   local what=$1 rc=0
   shift
-  readme "$@" >/dev/null 2>&1 || rc=$?
-  ((rc == 2)) || fail "check-readme.sh exited $rc on $what, where a usage error is 2"
+  prose "$@" >/dev/null 2>&1 || rc=$?
+  ((rc == 2)) || fail "check-prose.sh exited $rc on $what, where a usage error is 2"
 }
 
 case "$mode" in

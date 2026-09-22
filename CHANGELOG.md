@@ -2,6 +2,19 @@
 
 Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), dated rather than numbered, and with no `Unreleased` section — a skill is read at whatever revision you have checked out, so whatever is on the default branch is what every reader already has, and a section for work that has landed but not shipped would never close. The rule lives in the [versioning](https://github.com/rokokol/versioning-skill) skill, which owns what has no version
 
+## 2026-09-22
+
+### Changed
+
+- `tests/check-readme.sh` is `check-prose.sh` at the repository root, and it takes any markdown rather than readmes alone. The rules are the readme's and the reader is the same person, so a `SKILL.md`, a changelog and a reference are held to them too. Five repositories carried a copy of two of these rules inlined in their own gate, in two spellings that had already drifted apart; the file travels to them instead
+- a YAML frontmatter block is skipped. Its keys are neither paragraphs nor a hard wrap, and a description ending on a full stop is a sentence in a field
+- the rule against a section that has its own file asks whether the heading **is** the word rather than contains it. "Before contributing to someone else's project" is a section about contributing, not a second copy of `CONTRIBUTING.md`
+
+### Added
+
+- a typographic quotation mark is a finding: `«»`, `“”` and `‘’`. A document is read as plain text somewhere, and the plain `"` survives that. A code span is exempt, because a rule has to be able to show the character it forbids
+- `tests/fixtures/quiet-skill.md`, the silence half of the proof for documents that are not readmes: a frontmatter, a heading that contains one of the words, and a code span holding the characters the rules forbid
+
 ## 2026-09-18
 
 ### Added
