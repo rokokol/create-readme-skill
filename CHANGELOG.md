@@ -13,7 +13,8 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 ### Added
 
 - a typographic quotation mark is a finding: `«»`, `“”` and `‘’`. A document is read as plain text somewhere, and the plain `"` survives that. A code span is exempt, because a rule has to be able to show the character it forbids
-- `tests/fixtures/quiet-skill.md`, the silence half of the proof for documents that are not readmes: a frontmatter, a heading that contains one of the words, and a code span holding the characters the rules forbid
+- the proof that each rule can fail travels inside `check-prose.sh` instead of beside it. Before it reads a document it was given, it reads two of its own — one written to break every rule, with each finding demanded by name, six typographic marks demanded by count and four full stops demanded by count, and one written to break none, which must be silent. A consumer repository keeps no fixture for a vendored file, so a proof that stayed here would not travel with it; `CHECK_PROSE_NESTED=1` skips it, and is how the proof runs this same copy
+- the four fixture files are gone with it, and what is left in the gate is the proof of that proof: a copy with one rule taken away must fail its own self-test, and for that rule's reason
 
 ## 2026-09-18
 

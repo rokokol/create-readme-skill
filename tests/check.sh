@@ -136,53 +136,40 @@ check_behaviour() {
   # SKILL.md and the changelog are held to them too
   prose README.md SKILL.md CHANGELOG.md
 
-  echo "== each of those rules is able to fail"
-  # One fixture breaking every rule, and every finding demanded by name: a single
-  # over-broad rule must not be able to cover for one that has gone dead
-  out=$(prose tests/fixtures/bad-readme.md 2>&1 || true)
-  if prose tests/fixtures/bad-readme.md >/dev/null 2>&1; then
-    fail "tests/fixtures/bad-readme.md passed the readme lint — it cannot catch anything"
-  fi
-  # The count is taken from the loop rather than typed beside it: a typed "4" stays true
-  # only until someone adds a fifth rule to the list above
-  caught=0
-  for want in \
-    'ends with a full stop' \
-    'hard-wrapped paragraph' \
-    "admonition keyword" \
-    'typographic quotation mark' \
-    'has its own file'; do
-    printf '%s\n' "$out" | grep -qF "$want" ||
-      fail "the readme lint no longer reports \"$want\" on tests/fixtures/bad-readme.md"
-    caught=$((caught + 1))
-  done
-  echo "   $caught rules broken, $caught caught"
-
-  echo "== a full stop behind closing markup is still a full stop"
-  # The rule read the last character only, so `.**`, `.)` and a stop inside closing
-  # backticks all passed. Each line of this fixture hides one that way, and each is demanded
-  stops=$(prose tests/fixtures/stop-behind-markup.md 2>&1 | grep -cF 'ends with a full stop' || true)
-  ((stops == 3)) ||
-    fail "the readme lint caught $stops of the 3 full stops behind markup in tests/fixtures/stop-behind-markup.md"
-
-  echo "== and none of them fires on a readme that breaks nothing"
-  # The other half of the proof, and the half that was missing: a lint proven only able to
-  # go red is proven only to be loud. Every shape in this fixture is legitimate — an ordered
-  # list, a table, an admonition done right, a fenced block and an indented one — and each
-  # was a false positive at some point. An ordered list reddened every document that had
-  # one, because `1.` and `2.` on consecutive lines read as a paragraph broken in two.
-  # Its title says "contributing" on purpose: a readme's own title is the project's name,
-  # and the rule against a section that has its own file fired on the contributing skill's
-  # quiet-skill.md is the same proof for the documents that are not readmes, where every
-  # false positive this checker has had since it began taking them lives: a frontmatter
-  # read as two paragraphs in a row, a heading that contains "contributing" rather than
-  # being it, a rule showing the character it forbids inside a code span, and a paragraph
-  # closing on a literal a program prints
-  for f in tests/fixtures/quiet-readme.md tests/fixtures/quiet-skill.md; do
-    out=$(prose "$f" 2>&1) && quiet=0 || quiet=$?
-    ((quiet == 0)) ||
-      fail "the prose lint reported a finding on $f, which breaks no rule:"$'\n'"$out"
-  done
+  echo "== the proof of those rules travels with the file, and it notices a rule going dead"
+  # The run above already proved them: check-prose.sh reads two documents of its own before
+  # any real one — written to break every rule and to break none — and demands each finding
+  # by name, six typographic marks by count and four full stops by count. The proof lives
+  # inside the file because the file travels to repositories that keep no fixture for it.
+  # What is left here is the proof of that proof: a copy with one rule taken away must fail
+  # its own self-test, and for that rule's reason, or the self-test is passing on something
+  # other than what it names
+  neutered() { # neutered FRAGMENT REPLACEMENT WHAT EXPECTED
+    local out
+    # index and substr, not sub(): sub takes a regular expression, and a fragment holding
+    # * or [ would either match nothing or match the wrong thing
+    FRAG="$1" REPL="$2" awk '
+      !done { at = index($0, ENVIRON["FRAG"]) }
+      !done && at {
+        $0 = substr($0, 1, at - 1) ENVIRON["REPL"] substr($0, at + length(ENVIRON["FRAG"]))
+        done = 1
+      }
+      { print }
+    ' check-prose.sh >"$work/neutered.sh"
+    cmp -s check-prose.sh "$work/neutered.sh" &&
+      fail "neutering $3 changed nothing in check-prose.sh — the edit matched no line"
+    if out=$("$BASH" "$work/neutered.sh" README.md 2>&1); then
+      fail "check-prose.sh with $3 taken away passed its own self-test — that proof proves nothing"
+    fi
+    [[ "$out" == *"$4"* ]] ||
+      fail "check-prose.sh with $3 taken away failed for another reason: $out"
+  }
+  neutered "\$'\\xe2\\x80\\x9c'" "\$'\\xe2\\x80\\xNEVER'" \
+    "the left double quotation mark" "of the 6 typographic marks"
+  neutered '*[*_\)\`\"]' '*[*_\)\"]' \
+    "a full stop behind a closing code span" "of the 4 full stops"
+  neutered "'> [!'*']'?*" "'NEVERMATCHES'" \
+    "the admonition shape" "admonition keyword"
 
   # check-prose.sh claims bash 3.2, and a grep for newer syntax is a proxy; the mechanism
   # is this half under the real 3.2, with two constructs planted that only a 3.2 rejects.
