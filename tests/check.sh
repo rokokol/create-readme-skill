@@ -44,9 +44,14 @@ prose() { "$BASH" "$HERE/check-prose.sh" "$@"; }
 # One place decides the mode, so no call is left asking for a tree the runner proving the
 # 3.2 claim does not have: check-sh.sh reads the script it is given through shfmt, and a
 # macOS image carries neither shfmt nor jq
+# Whether check-sh.sh can read a script as a tree here, which is the one thing --bash-only
+# is about. A macOS image carries neither shfmt nor jq, and neither does a job that runs
+# the behaviour half alone; the machine is not the question, the tools are
+tools_for_a_tree() { command -v shfmt >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; }
+
 checker() {
   local tree_flag=()
-  [[ -z "${CHECK_BASH32:-}" ]] || tree_flag=(--bash-only)
+  tools_for_a_tree || tree_flag=(--bash-only)
   "$BASH" "$HERE/check-sh.sh" ${tree_flag[@]+"${tree_flag[@]}"} "$@"
 }
 
