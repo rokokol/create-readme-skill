@@ -79,6 +79,21 @@ if [ -z "${CHECK_PROSE_NESTED:-}" ]; then
   cat >"$probe/bad.md" <<'BAD'
 # A document breaking every rule this script knows
 
+````markdown
+```
+A short fence inside a longer one is text, not the end of the block.
+```
+````
+
+~~~
+A tilde fence closes on tildes.
+~~~
+
+    ```
+    Four spaces make this indented code, so the line above opens no fence
+
+```a span``` that opens a line is a code span and not a fence, since the info string of a backtick fence holds no backtick
+
 This paragraph ends with a full stop.
 
 **A bold paragraph that still ends with one.**
@@ -139,6 +154,25 @@ A rule has to be able to show the character it forbids, so a code span holding `
 echo "and a hard wrap
 across two lines is code, not prose."
 ```
+
+````markdown
+```sh
+echo "a short fence inside a longer one is text, not its end."
+```
+A line after it is still inside the outer block.
+Two of them in a row are not a hard wrap.
+````
+
+```
+```text with an info string opens a block and closes none
+A sentence on the next line is still code.
+```
+
+~~~
+A tilde fence is a fence.
+```
+A backtick fence does not close it.
+~~~
 
     An indented block is code too.
     Two lines of it.
@@ -206,7 +240,7 @@ TAIL_MARKUP='*[*_)`"]'
 TWO_SPANS='*`*`*'
 
 for file in "$@"; do
-  inside=0
+  fence='' # the run that opened the fenced block the line is in, empty outside one
   prev_prose=0
   front=0
   n=0
@@ -223,14 +257,40 @@ for file in "$@"; do
       if [ "$line" = "---" ]; then front=0; fi
       continue
     fi
-    case $line in
-      '```'*)
-        inside=$((1 - inside))
+    # A fence is three or more backticks or tildes, indented by at most three spaces. It
+    # closes only on the same character, at least as long and with nothing after it, so a
+    # block can show a shorter fence as text: a toggle on every ``` line read the lines
+    # after the inner one as prose. A backtick fence carries no backtick in its info string,
+    # or the line is a code span instead
+    lead=${line%%[! ]*}
+    body=${line#"$lead"}
+    case $body in
+      '```'*) mark='`' ;;
+      '~~~'*) mark='~' ;;
+      *) mark='' ;;
+    esac
+    [ "${#lead}" -le 3 ] || mark=''
+    run=''
+    rest=$body
+    if [ -n "$mark" ]; then
+      while [ "${rest#"$mark"}" != "$rest" ]; do
+        run=$run$mark
+        rest=${rest#"$mark"}
+      done
+    fi
+    if [ -z "$fence" ]; then
+      if [ -n "$mark" ] && { [ "$mark" = '~' ] || [ "${rest#*\`}" = "$rest" ]; }; then
+        fence=$run
         prev_prose=0
         continue
-        ;;
-    esac
-    [ "$inside" -eq 1 ] && continue
+      fi
+    else
+      if [ "$mark" = "${fence%"${fence#?}"}" ] && [ "${#run}" -ge "${#fence}" ] &&
+        [ -z "${rest//[[:space:]]/}" ]; then
+        fence=''
+      fi
+      continue
+    fi
 
     # An indented block is code as much as a fenced one is, and the rules below are about
     # prose: a line of shell that ends in a full stop was being reported as a paragraph
