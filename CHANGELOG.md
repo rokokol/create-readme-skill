@@ -8,6 +8,7 @@ Kept in the shape of [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), d
 
 - `check-prose.sh` reads fenced code the way CommonMark does. A block closes only on a fence of its own character, at least as long and with nothing after it, so a block opened with four backticks can show a fence of three as text. Before, every line opening with three backticks toggled the state, and the lines after an inner fence were reported as prose
 - a `~~~` fence is a fence. Before, its lines were read as prose
+- the self-test of `check-prose.sh` names the right cause when its own document yields too many full stops or quotation marks: a line that is not prose was read as prose. Before, it said that a hidden case was missed, which is the cause only when there are too few
 
 ## 2026-09-25
 

@@ -195,24 +195,29 @@ QUIET
         ;;
     esac
   done
+  # probe_count WHAT GOT WANT MISSED — a count the document demands exactly. Fewer means a
+  # planted case went unreported, for the reason MISSED; more means the rule read a line
+  # the document does not mean as prose, such as one inside a fence
+  probe_count() {
+    [ "$2" -eq "$3" ] && return 0
+    if [ "$2" -lt "$3" ]; then
+      printf 'check-prose: %s of the %s %s were caught — %s\n' "$2" "$3" "$1" "$4" >&2
+    else
+      printf 'check-prose: %s %s were reported where the document plants %s — a line that is not prose was read as prose\n' \
+        "$2" "$1" "$3" >&2
+    fi
+    exit 1
+  }
   # One message covers six characters, so a live one would cover for a dead one. Each gets
   # a paragraph to itself — a pair sharing a line lets its second half answer for the
   # first — and all six are demanded
   probe_quotes=$(printf '%s\n' "$probe_out" | grep -c 'typographic quotation mark' || true)
-  if [ "$probe_quotes" -ne 6 ]; then
-    printf 'check-prose: %s of the 6 typographic marks were caught — one of them reports nothing\n' \
-      "$probe_quotes" >&2
-    exit 1
-  fi
+  probe_count 'typographic marks' "$probe_quotes" 6 'one of them reports nothing'
   # The same shape again: reading the last character only would pass `.**`, `.)` and a
   # stop inside closing backticks, so the document hides one behind each and all four
   # full stops are demanded
   probe_stops=$(printf '%s\n' "$probe_out" | grep -c 'ends with a full stop' || true)
-  if [ "$probe_stops" -ne 4 ]; then
-    printf 'check-prose: %s of the 4 full stops were caught — one hidden behind closing markup was not\n' \
-      "$probe_stops" >&2
-    exit 1
-  fi
+  probe_count 'full stops' "$probe_stops" 4 'one hidden behind closing markup was not'
   if ! probe_out=$(CHECK_PROSE_NESTED=1 "$self" "$script" "$probe/quiet.md" 2>&1); then
     printf 'check-prose: a document breaking no rule was reported on:\n%s\n' "$probe_out" >&2
     exit 1

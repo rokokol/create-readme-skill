@@ -187,6 +187,9 @@ check_behaviour() {
     "a full stop behind a closing code span" "of the 4 full stops"
   neutered "'> [!'*']'?*" "'NEVERMATCHES'" \
     "the admonition shape" "admonition keyword"
+  # A count can also overshoot: with the tilde fence gone, the lines inside it are prose
+  neutered "'~~~'*) mark='~' ;;" "'~~~'*) mark='' ;;" \
+    "the tilde fence" "were reported where the document plants 4"
 
   # check-prose.sh claims bash 3.2, and a grep for newer syntax is a proxy; the mechanism
   # is this half under the real 3.2, with two constructs planted that only a 3.2 rejects.
